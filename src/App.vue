@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>DataTable Component</h1>
+    <h1>Britecore DataTable Component</h1>
     <DataTable/>
   </div>
 </template>
