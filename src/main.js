@@ -1,6 +1,17 @@
 import Vue from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTimes, faSort, faSortDown, faSortUp, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faTimes)
+library.add(faSort)
+library.add(faSortDown)
+library.add(faSortUp)
+library.add(faPencilAlt)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 
