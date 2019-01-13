@@ -7,7 +7,6 @@
         </div>
     </div>
     <div class="table">
-
       <div class="table-header">
         <div class="th bold">Name
           <!--<font-awesome-icon v-on:click="sortColumn('Name', 0)" icon="sort"/>-->
@@ -92,7 +91,6 @@
       },
       editItem: function (item) {
         this.$set(item, 'edit', true)
-        console.log(item)
       }
     }
   }
@@ -100,6 +98,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  $primary-green: #42b983;
+  $grayish: #d0dfe2;
+  $whitish: #f2f6f7;
+  $aquamarine: #2c3e50;
+  $greenish: #ecf2f3;
   h3 {
     margin: 40px 0 0;
   }
@@ -115,7 +118,7 @@
   }
 
   a {
-    color: #42b983;
+    color: $primary-green;
   }
 
   .container {
@@ -124,7 +127,7 @@
 
   .item {
     flex: 1;
-    border-bottom: 1px solid #d0dfe2;
+    border-bottom: 1px solid $grayish;
     padding: 12px;
   }
   .row-item {
@@ -136,7 +139,7 @@
   }
 
   .row-item:hover {
-    background-color: #ecf2f3;
+    background-color: $greenish;
   }
 
   .th {
@@ -159,28 +162,28 @@
 
   .edit-icon {
     cursor: pointer;
-    color: #d0dfe2;
+    color: $grayish;
   }
   .edit-icon:hover {
-    color: #42b983;
+    color: $primary-green;
   }
   .table-header {
-    background: #f2f6f7;
-    color: #355055;
+    background: $whitish;
+    color: $aquamarine;
     display: flex;
     align-items: center;
     padding: .75em 0;
     border-radius: 4px 4px 0 0;
     font-size: .9rem;
-    border-bottom: 1px solid #d0dfe2;
+    border-bottom: 1px solid $grayish;
   }
 
   .table {
-    border: 1px solid #d0dfe2;
+    border: 1px solid $grayish;
     border-radius: 4px;
   }
   .search-container {
-    border: 1px solid #d0dfe2;
+    border: 1px solid $grayish;
     width: 300px;
     display: flex;
     height: 40px;
@@ -200,14 +203,14 @@
   }
   .times-icon {
     cursor: pointer;
-    color: #d0dfe2;
+    color: $grayish;
   }
   .times-icon:hover {
-    color: #42b983;
+    color: $primary-green;
   }
   .description-input {
-    border: 1px solid #d0dfe2;
+    border: 1px solid $grayish;
     font-size: 14px;
-    color: #2c3e50;
+    color: $aquamarine;
   }
 </style>
