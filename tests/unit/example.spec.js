@@ -1,12 +1,19 @@
 import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/DataTable.vue'
+import DataTable from '../../src/components/DataTable.vue'
+import payments from '../../src/assets/data/payment'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
-    })
-    expect(wrapper.text()).toMatch(msg)
+describe('DataTable.vue', () => {
+  it('renders payments when passed', () => {
+    expect(typeof DataTable.data).toBe('function')
+    // const passedData = DataTable.data()
+    // const passedData = shallowMount(DataTable, {
+    //   propsData: {
+    //     payments: payments,
+    //     originalPayments: payments,
+    //     labels: Object.keys(payments[0])
+    //   }
+    // })
+    // console.log(wrapper)
+    // expect(passedData.labels).toBe(labels)
   })
 })

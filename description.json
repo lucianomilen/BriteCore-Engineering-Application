@@ -1,0 +1,16 @@
+{
+  "name": "Luciano Otoni Milen",
+  "age": 25,
+  "nationality": "Brazilian",
+  "hometown": "Belo Horizonte, Minas Gerais",
+  "web developer since": 2015,
+  "studying": "Information Systems @ UFMG",
+  "current job": "Web and mobile front end developer @ StudioMoob",
+  "current office location": "home office!",
+  "favourite JS framework": "React <3",
+  "favourite CSS approach": "CSS-in-JS (styled-components)",
+  "favourite hobbies": "Going countryside to visit as many waterfalls as possible",
+  "open-source enthusiast": true,
+  "loves functional javascript": true,
+  "main projects": ["worldfootball.mobi", "https://github.com/lucianomilen/isMaintained-extension", "https://lucianomilen.github.io/"]
+}

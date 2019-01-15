@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTimes, faSort, faSortDown, faSortUp, faPencilAlt, faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faSort, faSortDown, faSortUp, faPencilAlt, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faTimes)
@@ -11,6 +11,7 @@ library.add(faSortDown)
 library.add(faSortUp)
 library.add(faPencilAlt)
 library.add(faFilter)
+library.add(faSearch)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

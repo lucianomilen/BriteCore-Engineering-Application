@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="datatable">
     <div class="search-container">
       <input v-on:change="filterName" v-model="searchTerm" class="search-input" placeholder="Enter the search term"
              type="text">
       <div v-on:click="clearSearch">
         <font-awesome-icon icon="times" class="times-icon"/>
       </div>
+      <button class="search-btn">
+        <font-awesome-icon icon="search" class="search-icon"/>
+      </button>
     </div>
     <div class="filter-container">
       <div v-on:click="displayFilter = !displayFilter">
@@ -33,73 +36,52 @@
     </div>
     <div class="table">
       <div class="table-header">
-        <div class="th bold">Name
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Name', 0)" icon="sort"
-                             v-show="sortData[0] === 0"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Name', 0)" v-show="sortData[0] === 1"
+        <div class="th bold" v-bind:class="header === 'Description' ? 'fl-2' : ''"
+             v-for="(header, index) in this.labels">
+          {{header}}
+          <font-awesome-icon class="sort-icon" v-on:click="sortColumn(header, index)" icon="sort"
+                             v-show="sortData[index] === 0"/>
+          <font-awesome-icon class="sort-icon" v-on:click="sortColumn(header, index)" v-show="sortData[index] === 1"
                              icon="sort-up"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Name', 0)" v-show="sortData[0] === 2"
-                             icon="sort-down"/>
-        </div>
-        <div class="th bold fl-2">Description
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Description', 1)" icon="sort"
-                             v-show="sortData[1] === 0"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Description', 1)" v-show="sortData[1] === 1"
-                             icon="sort-up"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Description', 1)" v-show="sortData[1] === 2"
-                             icon="sort-down"/>
-        </div>
-        <div class="th bold">Date
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Date', 2)" icon="sort"
-                             v-show="sortData[2] === 0"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Date', 2)" v-show="sortData[2] === 1"
-                             icon="sort-up"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Date', 2)" v-show="sortData[2] === 2"
-                             icon="sort-down"/>
-        </div>
-        <div class="th bold">Amount
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Amount', 3)" icon="sort"
-                             v-show="sortData[3] === 0"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Amount', 3)" v-show="sortData[3] === 1"
-                             icon="sort-up"/>
-          <font-awesome-icon class="sort-icon" v-on:click="sortColumn('Amount', 3)" v-show="sortData[3] === 2"
+          <font-awesome-icon class="sort-icon" v-on:click="sortColumn(header, index)" v-show="sortData[index] === 2"
                              icon="sort-down"/>
         </div>
       </div>
-      <div class="container row-item" v-for="item in payments" v-bind:key="item.ID">
-        <div class="item">{{item.Name}}</div>
-        <div class="item justify flex fl-2" v-show="!item.edit" @mouseover="showEdit = item"
+      <div class="row-item" v-for="item in payments" v-bind:key="item.ID">
+        <div class="item" v-for="label in labels" v-if="label !== 'Description'" v-bind:title="item[label]">
+          {{getCellData(item[label])}}
+        </div>
+        <div class="description-container" v-else @mouseover="showEdit = item"
              @mouseout="showEdit = null">
-          <div>
+          <div v-show="!item.edit">
             {{item.Description}}
           </div>
-          <div v-on:click="editItem(item)" v-show="showEdit === item">
+          <div v-on:click="editItem(item)" v-show="showEdit === item && !item.edit">
             <font-awesome-icon class="edit-icon" icon="pencil-alt"/>
           </div>
+          <input class="item description-input" v-show="item.edit" v-model="item.Description"
+                 v-on:blur="item.edit=false"
+                 @keyup.enter="item.edit=false"/>
         </div>
-        <input class="item description-input" v-show="item.edit" v-model="item.Description" v-on:blur="item.edit=false"
-               @keyup.enter="item.edit=false"/>
-        <div class="item">{{item.Date | moment}}</div>
-        <div class="item">{{item.Amount}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import payments from '../assets/data/payment'
   import moment from 'moment'
 
   export default {
     name: 'DataTable',
     data() {
       return {
-        payments: payments,
-        originalPayments: payments,
+        payments: this.$attrs.payments,
+        originalPayments: this.$attrs.payments,
+        labels: this.$attrs.labels,
         ascending: false,
         showEdit: {},
         searchTerm: "",
-        sortData: [0, 0, 0, 0],
+        sortData: this.$attrs.labels.map(() => 0),
         selectedAmount: null,
         selectedYear: null,
         displayFilter: false
@@ -122,27 +104,30 @@
             this.sortData[sortPos] = 1
             break
         }
-        // this.sortData[sortPos] = !this.sortData[sortPos]
-        payments.sort((a, b) => {
+        this.payments.sort((a, b) => {
           if (a[att] > b[att]) {
             return this.ascending ? 1 : -1
           }
           if (a[att] < b[att]) {
             return this.ascending ? -1 : 1
           }
-          // a must be equal to b
           return 0
         })
       },
-      filterName: function (e) {
+      filterName: function () {
+        if (!this.searchTerm)
+          this.clearSearch()
         this.payments = this.payments.filter(item => {
-          if (item.Name.toLowerCase().match(e.target.value)) {
+          if (item.Name.toLowerCase().match(this.searchTerm.toLowerCase())) {
             return true
           }
         })
       },
-      clearSearch: function () {
+      resetPaymentsList: function(){
         this.payments = this.originalPayments
+      },
+      clearSearch: function () {
+        this.resetPaymentsList()
         this.searchTerm = ""
         this.selectedAmount = null
         this.selectedYear = null
@@ -151,29 +136,27 @@
         this.$set(item, 'edit', true)
       },
       filterYear: function () {
-        if(!this.selectedYear)
-          this.payments = this.originalPayments
+        if (!this.selectedYear)
+          this.resetPaymentsList()
         else
-        this.payments = this.payments.filter(item => {
-          if (moment(item.Date).year() === this.selectedYear) {
-            return true
-          }
-        })
+          this.payments = this.payments.filter(item => {
+            if (moment(item.Date).year() === this.selectedYear) {
+              return true
+            }
+          })
       },
       filterAmount: function () {
-        if(!this.selectedAmount)
-          this.payments = this.originalPayments
+        if (!this.selectedAmount)
+          this.resetPaymentsList()
         else
-        this.payments = this.payments.filter(item => {
-          if ((this.selectedAmount.min <= item.Amount && item.Amount <= this.selectedAmount.max)) {
-            return true
-          }
-        })
-      }
-    },
-    filters: {
-      moment: function (date) {
-        return moment(date).format('MMMM Do YYYY, HH:mm')
+          this.payments = this.payments.filter(item => {
+            if ((this.selectedAmount.min <= item.Amount && item.Amount <= this.selectedAmount.max)) {
+              return true
+            }
+          })
+      },
+      getCellData: function (label) {
+        return isNaN(label) && moment(label).isValid() ? moment(label).format('MMMM Do YYYY, HH:mm') : label
       }
     }
   }
@@ -204,14 +187,13 @@
     color: $primary-green;
   }
 
-  .container {
-    display: flex;
-  }
-
   .item {
     flex: 1;
     border-bottom: 1px solid $grayish;
     padding: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .row-item {
@@ -220,6 +202,7 @@
     transition-duration: 0.25s;
     transition-timing-function: ease;
     transition-delay: 0s;
+    display: flex;
   }
 
   .row-item:hover {
@@ -246,10 +229,6 @@
     display: flex;
   }
 
-  .justify {
-    justify-content: space-between;
-  }
-
   .edit-icon {
     cursor: pointer;
     color: $grayish;
@@ -273,6 +252,7 @@
   .table {
     border: 1px solid $grayish;
     border-radius: 4px;
+
   }
 
   .search-container {
@@ -288,7 +268,6 @@
 
   .search-input {
     border: none;
-    /*border-right: 1px solid #d0dfe2;*/
     flex: 1;
     text-indent: 10px;
     font-size: 1em;
@@ -304,10 +283,12 @@
   .times-icon:hover {
     color: $primary-green;
   }
+
   .filter-icon {
     cursor: pointer;
     color: $primary-green;
   }
+
   .description-input {
     border: 1px solid $grayish;
     font-size: 14px;
@@ -329,15 +310,45 @@
     display: flex;
     margin-bottom: 12px;
   }
+
   .hidden-filter {
     visibility: hidden;
     transform: translate(-10px);
     opacity: 0;
     transition: visibility 0s, transform 0.1s linear;
   }
+
   .visible-filter {
     visibility: visible;
     transform: translate(10px);
     opacity: 1;
+  }
+
+  .description-container {
+    min-width: 0;
+    border-bottom: 1px solid $grayish;
+    padding: 12px;
+    justify-content: space-between;
+    display: flex;
+    flex: 2;
+  }
+
+  .search-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    border-left: 1px solid $grayish;
+    margin-left: 10px;
+    padding-right: 0;
+    outline: none;
+  }
+
+  .search-icon {
+    color: $primary-green;
+    cursor: pointer;
+  }
+
+  .datatable {
+    min-width: 400px;
   }
 </style>
