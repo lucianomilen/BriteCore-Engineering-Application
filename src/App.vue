@@ -13,10 +13,10 @@ export default {
   components: {
     DataTable
   },
-  data() {
+  data () {
     return {
     payments: payments,
-      labels: Object.keys(payments[0])
+    labels: Object.keys(payments[0])
     }
   }
 }
